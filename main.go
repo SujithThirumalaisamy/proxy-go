@@ -10,18 +10,18 @@ import (
 
 func main() {
 	var source string
-	var target string
+	var destination string
 
 	for i := 0; i < len(os.Args); i++ {
 		if os.Args[i] == "-p" {
-			target = ":" + strings.Split(os.Args[i+1], ":")[0]
 			source = ":" + strings.Split(os.Args[i+1], ":")[1]
+			destination = ":" + strings.Split(os.Args[i+1], ":")[0]
 		}
 	}
 
-	server, err := net.Listen("tcp", source)
+	server, err := net.Listen("tcp", destination)
 	if err != nil {
-		log.Fatalf("Failed to listen on %s: %v", source, err)
+		log.Fatalf("Failed to listen on %s: %v", destination, err)
 	}
 	defer server.Close()
 
@@ -33,7 +33,7 @@ func main() {
 				continue
 			}
 			go func() {
-				localCall, err := net.Dial("tcp", target)
+				localCall, err := net.Dial("tcp", source)
 				if err != nil {
 					log.Printf("Failed to connect to localCall: %v", err)
 					return
